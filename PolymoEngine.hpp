@@ -157,8 +157,9 @@ namespace Math {
         seed[1] = seed_gen() * (seed_gen() % 1000);
         XoroShiro128 Engine(seed[0], seed[1]);
 
-        int max_value = (1 << bits) - 1;
-        std::uniform_int_distribution<> dis(0, max_value);
+        int max = (1 << bits) - 1;
+        int min = (1 << (bits-2)) - 1;
+        std::uniform_int_distribution<> dis(min, max);
 
     loop:
         result = dis(Engine);
