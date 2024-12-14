@@ -6,9 +6,6 @@
 #include <utility>
 #include <cstdint>
 
-#define ChaCha_ROUNDS     20
-#define ChaCha_BLOCK_SIZE 64
-
 #pragma region XoroShiro128
 
 class XoroShiro128 {
