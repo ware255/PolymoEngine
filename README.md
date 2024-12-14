@@ -11,6 +11,7 @@
 - _uint32 (unsigned int)
 - _int64 (long long)
 - _uint64 (unsigned long long)
+- String (std::string)
 
 ***バグがあったらプルリクとかイシューとか待ってます。***
 
