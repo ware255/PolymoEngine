@@ -6,6 +6,9 @@
 #include <utility>
 #include <cstdint>
 
+#define ChaCha_ROUNDS     20
+#define ChaCha_BLOCK_SIZE 64
+
 #pragma region XoroShiro128
 
 class XoroShiro128 {
@@ -1410,6 +1413,10 @@ namespace Polymo {
             return *this;
         }
 
+        __forceinline char& __fastcall operator[](const int index) {
+            return Decrypt()[index];
+        }
+
         __forceinline const char* __fastcall c_str() {
             return Decrypt().c_str();
         }
@@ -1419,6 +1426,201 @@ namespace Polymo {
         }
 
         __forceinline __fastcall ~String() {
+            c.resize(0);
+        }
+    };
+
+    #pragma endregion
+
+    #pragma region _wchar
+
+    class _wchar {
+        uint64_t c1, c2;
+    public:
+        __forceinline __fastcall _wchar(wchar_t num = 0) {
+            auto [a, b] = Math::Crypto::ElGamal_Encrypt(num);
+            c1 = a, c2 = b;
+        }
+
+        __forceinline wchar_t __fastcall get() const {
+            return Math::Crypto::ElGamal_Decrypt(c1, c2);
+        }
+
+        __forceinline void __fastcall set(wchar_t num) {
+            auto [a, b] = Math::Crypto::ElGamal_Encrypt(num);
+            c1 = a, c2 = b;
+        }
+
+        __forceinline _wchar __fastcall operator+(const wchar_t num) const {
+            return _wchar(Math::Crypto::ElGamal_Decrypt(c1, c2) + num);
+        }
+
+        __forceinline _wchar __fastcall operator-(const wchar_t num) const {
+            return _wchar(Math::Crypto::ElGamal_Decrypt(c1, c2) - num);
+        }
+
+        __forceinline _wchar __fastcall operator*(const wchar_t num) const {
+            return _wchar(Math::Crypto::ElGamal_Decrypt(c1, c2) * num);
+        }
+
+        __forceinline _wchar __fastcall operator/(const wchar_t num) const {
+            return _wchar(Math::Crypto::ElGamal_Decrypt(c1, c2) / num);
+        }
+
+        __forceinline _wchar __fastcall operator%(const wchar_t num) const {
+            return _wchar(Math::Crypto::ElGamal_Decrypt(c1, c2) % num);
+        }
+
+        __forceinline _wchar __fastcall operator&(const wchar_t num) const {
+            return _wchar(Math::Crypto::ElGamal_Decrypt(c1, c2) & num);
+        }
+
+        __forceinline _wchar __fastcall operator|(const wchar_t num) const {
+            return _wchar(Math::Crypto::ElGamal_Decrypt(c1, c2) | num);
+        }
+
+        __forceinline _wchar __fastcall operator^(const wchar_t num) const {
+            return _wchar(Math::Crypto::ElGamal_Decrypt(c1, c2) ^ num);
+        }
+
+        __forceinline _wchar __fastcall operator<<(const wchar_t num) const {
+            return _wchar(Math::Crypto::ElGamal_Decrypt(c1, c2) << num);
+        }
+
+        __forceinline _wchar __fastcall operator>>(const wchar_t num) const {
+            return _wchar(Math::Crypto::ElGamal_Decrypt(c1, c2) >> num);
+        }
+
+        __forceinline _wchar& __fastcall operator+=(const wchar_t num) {
+            auto [a, b] = Math::Crypto::ElGamal_Encrypt(Math::Crypto::ElGamal_Decrypt(c1, c2) + num);
+            c1 = a, c2 = b;
+            return *this;
+        }
+
+        __forceinline _wchar& __fastcall operator-=(const wchar_t num) {
+            auto [a, b] = Math::Crypto::ElGamal_Encrypt(Math::Crypto::ElGamal_Decrypt(c1, c2) - num);
+            c1 = a, c2 = b;
+            return *this;
+        }
+
+        __forceinline _wchar& __fastcall operator*=(const wchar_t num) {
+            auto [a, b] = Math::Crypto::ElGamal_Encrypt(Math::Crypto::ElGamal_Decrypt(c1, c2) * num);
+            c1 = a, c2 = b;
+            return *this;
+        }
+
+        __forceinline _wchar& __fastcall operator/=(const wchar_t num) {
+            auto [a, b] = Math::Crypto::ElGamal_Encrypt(Math::Crypto::ElGamal_Decrypt(c1, c2) / num);
+            c1 = a, c2 = b;
+            return *this;
+        }
+
+        __forceinline _wchar& __fastcall operator%=(const wchar_t num) {
+            auto [a, b] = Math::Crypto::ElGamal_Encrypt(Math::Crypto::ElGamal_Decrypt(c1, c2) % num);
+            c1 = a, c2 = b;
+            return *this;
+        }
+
+        __forceinline _wchar& __fastcall operator&=(const wchar_t num) {
+            auto [a, b] = Math::Crypto::ElGamal_Encrypt(Math::Crypto::ElGamal_Decrypt(c1, c2) & num);
+            c1 = a, c2 = b;
+            return *this;
+        }
+
+        __forceinline _wchar& __fastcall operator|=(const wchar_t num) {
+            auto [a, b] = Math::Crypto::ElGamal_Encrypt(Math::Crypto::ElGamal_Decrypt(c1, c2) | num);
+            c1 = a, c2 = b;
+            return *this;
+        }
+
+        __forceinline _wchar& __fastcall operator^=(const wchar_t num) {
+            auto [a, b] = Math::Crypto::ElGamal_Encrypt(Math::Crypto::ElGamal_Decrypt(c1, c2) ^ num);
+            c1 = a, c2 = b;
+            return *this;
+        }
+
+        __forceinline _wchar& __fastcall operator<<=(const wchar_t num) {
+            auto [a, b] = Math::Crypto::ElGamal_Encrypt(Math::Crypto::ElGamal_Decrypt(c1, c2) << num);
+            c1 = a, c2 = b;
+            return *this;
+        }
+
+        __forceinline _wchar& __fastcall operator>>=(const wchar_t num) {
+            auto [a, b] = Math::Crypto::ElGamal_Encrypt(Math::Crypto::ElGamal_Decrypt(c1, c2) >> num);
+            c1 = a, c2 = b;
+            return *this;
+        }
+
+        __forceinline _wchar& __fastcall operator=(const wchar_t num) {
+            auto [a, b] = Math::Crypto::ElGamal_Encrypt(num);
+            c1 = a, c2 = b;
+            return *this;
+        }
+
+        __forceinline __fastcall operator wchar_t() const {
+            return static_cast<wchar_t>(Math::Crypto::ElGamal_Decrypt(c1, c2));
+        }
+    };
+
+    #pragma endregion
+
+    #pragma region StringW
+
+    class StringW {
+        std::vector<_wchar> c;
+
+        void Encrypt(const std::wstring& str) {
+            c.resize(str.length());
+            for (size_t i = 0; i < str.length(); ++i)
+                c[i] = str[i];
+        }
+
+        std::wstring Decrypt() {
+            std::wstring m;
+            for (size_t i = 0; i < c.size(); ++i)
+                m += c[i];
+            return m;
+        }
+    public:
+        __forceinline __fastcall StringW(const std::wstring& str) {
+            Encrypt(str);
+        }
+
+        __forceinline __fastcall StringW(const wchar_t* str) {
+            Encrypt(str);
+        }
+
+        __forceinline std::wstring __fastcall get() {
+            return Decrypt();
+        }
+
+        __forceinline void __fastcall set(const std::wstring& str) {
+            Encrypt(str);
+        }
+
+        __forceinline StringW __fastcall operator+(const std::wstring& str) {
+            return StringW(Decrypt() + str);
+        }
+
+        __forceinline StringW& __fastcall operator+=(const std::wstring& str) {
+            Encrypt(Decrypt() + str);
+            return *this;
+        }
+
+        __forceinline StringW& __fastcall operator=(const std::wstring& str) {
+            set(str);
+            return *this;
+        }
+
+        __forceinline wchar_t& __fastcall operator[](const int index) {
+            return Decrypt()[index];
+        }
+
+        __forceinline __fastcall operator std::wstring() {
+            return Decrypt();
+        }
+
+        __forceinline __fastcall ~StringW() {
             c.resize(0);
         }
     };
