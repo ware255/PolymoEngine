@@ -11,7 +11,9 @@
 - _uint32 (unsigned int)
 - _int64 (long long)
 - _uint64 (unsigned long long)
+- _wchar (wchar_t)
 - String (std::string)
+- StringW (std::wstring)
 
 ***バグがあったらプルリクとかイシューとか待ってます。***
 
