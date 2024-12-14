@@ -1,8 +1,13 @@
 #pragma once
 
+//#include <vector>
+//#include <string>
 #include <random>
 #include <utility>
 #include <cstdint>
+
+#define ChaCha_ROUNDS     20
+#define ChaCha_BLOCK_SIZE 64
 
 #pragma region XoroShiro128
 
@@ -82,9 +87,7 @@ namespace Math {
         uint64_t reduction(uint64_t t) {
             uint64_t c = (t * nr) & mask;
             c = (c * n + t) >> nb;
-            if (c >= n) {
-                c -= n;
-            }
+            if (c >= n) c -= n;
             return c;
         }
 
@@ -96,8 +99,7 @@ namespace Math {
             uint64_t p = reduction(a * r2);
             uint64_t x = reduction(r2);
             while (b > 0) {
-                if (b & 1)
-                    x = reduction(x * p);
+                if (b & 1) x = reduction(x * p);
                 p = reduction(p * p);
                 b >>= 1;
             }
@@ -157,9 +159,9 @@ namespace Math {
         seed[1] = seed_gen() * (seed_gen() % 1000);
         XoroShiro128 Engine(seed[0], seed[1]);
 
-        int max = (1 << bits) - 1;
-        int min = (1 << (bits-2)) - 1;
-        std::uniform_int_distribution<> dis(min, max);
+        int max_value = (1 << bits) - 1;
+        int min_value = (1 << (bits-2)) - 1;
+        std::uniform_int_distribution<> dis(min_value, max_value);
 
     loop:
         result = dis(Engine);
@@ -1358,6 +1360,69 @@ namespace Polymo {
 
         __forceinline __fastcall operator unsigned long long() {
             return Decrypt();
+        }
+    };
+
+    #pragma endregion
+
+    #pragma region String
+
+    class String {
+        std::vector<_int8> c;
+
+        void Encrypt(const std::string& str) {
+            c.resize(str.length());
+            for (size_t i = 0; i < str.length(); ++i)
+                c[i] = str[i];
+        }
+
+        std::string Decrypt() {
+            std::string m;
+            for (size_t i = 0; i < c.size(); ++i)
+                m += c[i];
+            return m;
+        }
+    public:
+        __forceinline __fastcall String(const std::string& str) {
+            Encrypt(str);
+        }
+
+        __forceinline __fastcall String(const char* str) {
+            Encrypt(str);
+        }
+
+        __forceinline std::string __fastcall get() {
+            return Decrypt();
+        }
+
+        __forceinline void __fastcall set(const std::string& str) {
+            Encrypt(str);
+        }
+
+        __forceinline String __fastcall operator+(const std::string& str) {
+            return String(Decrypt() + str);
+        }
+
+        __forceinline String& __fastcall operator+=(const std::string& str) {
+            Encrypt(Decrypt() + str);
+            return *this;
+        }
+
+        __forceinline String& __fastcall operator=(const std::string& str) {
+            set(str);
+            return *this;
+        }
+
+        __forceinline const char* __fastcall c_str() {
+            return Decrypt().c_str();
+        }
+
+        __forceinline __fastcall operator std::string() {
+            return Decrypt();
+        }
+
+        __forceinline __fastcall ~String() {
+            c.resize(0);
         }
     };
 
